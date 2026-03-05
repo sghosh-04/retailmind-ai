@@ -24,13 +24,13 @@ importers:
         specifier: ^3.1000.0
         version: 3.1000.0
       '@aws-sdk/client-dynamodb':
-        specifier: ^3.1002.0
+        specifier: ^3.1000.0
         version: 3.1002.0
       '@aws-sdk/client-sagemaker-runtime':
         specifier: ^3.1000.0
         version: 3.1000.0
       '@aws-sdk/lib-dynamodb':
-        specifier: ^3.1002.0
+        specifier: ^3.1000.0
         version: 3.1002.0(@aws-sdk/client-dynamodb@3.1002.0)
       '@google/genai':
         specifier: ^1.43.0
