@@ -26,12 +26,18 @@ importers:
       '@aws-sdk/client-dynamodb':
         specifier: ^3.1000.0
         version: 3.1002.0
+      '@aws-sdk/client-s3':
+        specifier: ^3.1000.0
+        version: 3.1000.0
       '@aws-sdk/client-sagemaker-runtime':
         specifier: ^3.1000.0
         version: 3.1000.0
       '@aws-sdk/lib-dynamodb':
         specifier: ^3.1000.0
         version: 3.1002.0(@aws-sdk/client-dynamodb@3.1002.0)
+      '@aws-sdk/s3-request-presigner':
+        specifier: ^3.1000.0
+        version: 3.1000.0
       '@google/genai':
         specifier: ^1.43.0
         version: 1.43.0
@@ -255,12 +261,6 @@ importers:
         specifier: ^3.24.1
         version: 3.25.76
     devDependencies:
-      '@aws-sdk/client-s3':
-        specifier: ^3.1000.0
-        version: 3.1000.0
-      '@aws-sdk/s3-request-presigner':
-        specifier: ^3.1000.0
-        version: 3.1000.0
       '@tailwindcss/postcss':
         specifier: ^4.2.0
         version: 4.2.1
