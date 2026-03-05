@@ -1,0 +1,8 @@
+.aws-sam
+lambda
+scripts
+tests
+.venv
+template.yaml
+samconfig.toml
+node_modules
