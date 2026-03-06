@@ -2,8 +2,17 @@ import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY! });
+function getAI() {
+  if (!process.env.GOOGLE_API_KEY) {
+    throw new Error("GOOGLE_API_KEY is not set");
+  }
+
+  return new GoogleGenAI({
+    apiKey: process.env.GOOGLE_API_KEY,
+  });
+}
 
 const SYSTEM_PROMPT = `You are RetailIQ Copilot — an intelligent AI assistant built into the RetailMind platform.
 
@@ -35,6 +44,7 @@ async function tryGemini(
   controller: ReadableStreamDefaultController,
   encoder: TextEncoder
 ) {
+  const ai = getAI();
   const resp = await ai.models.generateContentStream({
     model,
     contents,
