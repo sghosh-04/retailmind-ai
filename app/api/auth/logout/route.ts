@@ -6,7 +6,7 @@ export async function POST() {
   return NextResponse.json({ success: true })
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   await deleteSession()
-  return NextResponse.redirect(new URL("/login", "http://localhost:3000"))
+  return NextResponse.redirect(new URL("/login", req.url))
 }
