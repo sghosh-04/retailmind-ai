@@ -1,27 +1,44 @@
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import './globals.css'
+import { redirect } from "next/navigation"
+import { getSession } from "@/lib/auth"
+import { db, TABLE_PREFIX } from "@/lib/dynamodb"
+import { GetCommand } from "@aws-sdk/lib-dynamodb"
+import DashboardSidebar from "@/components/dashboard/sidebar"
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const session = await getSession()
+  if (!session) redirect("/login")
 
-export const metadata: Metadata = {
-  title: 'RetailIQ — AI Market Intelligence Platform',
-  description: 'AI-powered retail intelligence: forecasting, pricing analytics, and market insights for data-driven commerce teams.',
-  generator: 'v0.app',
+  let profile = null;
+  let user = null;
+  let dbError = null;
 
-}
+  try {
+    const profileRes = await db.send(new GetCommand({
+      TableName: `${TABLE_PREFIX}BusinessProfiles`,
+      Key: { user_id: session.id }
+    }));
+    profile = profileRes.Item;
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+    const userRes = await db.send(new GetCommand({
+      TableName: `${TABLE_PREFIX}Users`,
+      Key: { id: session.id }
+    }));
+    user = userRes.Item;
+  } catch (err: any) {
+    console.error("Layout DDB Error:", err);
+    dbError = err.message;
+  }
+
+  const businessName = profile?.business_name ?? session.business_name ?? session.email ?? "Unknown"
+  const displayId = user?.display_id ?? session.display_id ?? "RIQ-0000"
+  const logoUrl = profile?.logo_url ?? null
+
   return (
-    <html lang="en">
-      <body className="font-sans antialiased">
+    <div className="flex h-screen overflow-hidden bg-background">
+      <DashboardSidebar businessName={businessName} displayId={displayId} logoUrl={logoUrl} />
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {children}
-      </body>
-    </html>
+      </div>
+    </div>
   )
 }
