@@ -74,7 +74,7 @@ export default function DashboardSidebar({ businessName, displayId, logoUrl }: P
   const router = useRouter()
 
   async function handleLogout() {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/auth/logout`, { method: "POST" })
+    await fetch(`/api/auth/logout`, { method: "POST" })
     document.cookie = "retailiq_session=; path=/; max-age=0; samesite=lax";
     router.push("/login")
     router.refresh()

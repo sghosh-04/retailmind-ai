@@ -69,7 +69,7 @@ export default function RegisterCard() {
 
     setLoading(true)
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/verify-gst`, {
+      const res = await fetch(`/api/verify-gst`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ gst_number: form.gst_number }),
@@ -105,7 +105,7 @@ export default function RegisterCard() {
       }
       setLoading(true)
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/auth/register?step=verify`, {
+        const res = await fetch(`/api/auth/register?step=verify`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -134,7 +134,7 @@ export default function RegisterCard() {
     } else if (step === 3) {
       setLoading(true)
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/auth/register?step=confirm`, {
+        const res = await fetch(`/api/auth/register?step=confirm`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

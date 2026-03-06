@@ -71,7 +71,7 @@ export default function SettingsForm({ user }: Props) {
     if (user?.logo_url) {
       setLogoUploading(true)
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/profile`, {
+        const res = await fetch(`/api/profile`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ logo_url: "" }),
@@ -91,7 +91,7 @@ export default function SettingsForm({ user }: Props) {
     try {
       const fd = new FormData()
       fd.append("logo", logoFile)
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/profile/logo`, { method: "POST", body: fd })
+      const res = await fetch(`/api/profile/logo`, { method: "POST", body: fd })
       const data = await res.json()
       if (!res.ok) { setLogoError(data.error || "Upload failed"); return null }
       setLogoUrl(data.logo_url)
@@ -114,7 +114,7 @@ export default function SettingsForm({ user }: Props) {
       // If logoFile exists but we got null back, the upload failed.
       if (logoFile && finalLogoUrl === null) { setLoading(false); return }
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/profile`, {
+      const res = await fetch(`/api/profile`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, logo_url: finalLogoUrl }),

@@ -83,7 +83,7 @@ export default function ChurnPredictionClient() {
     const [openId, setOpenId] = useState<string | null>(null)
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/churn-history`)
+        fetch(`/api/churn-history`)
             .then(res => res.json())
             .then(data => {
                 if (data.predictions) {
@@ -101,7 +101,7 @@ export default function ChurnPredictionClient() {
         setIsLoading(true)
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/churn-predict`, {
+            const res = await fetch(`/api/churn-predict`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)
@@ -121,7 +121,7 @@ export default function ChurnPredictionClient() {
             })
 
             // 🔄 Refresh history after saving
-            const historyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/churn-history`)
+            const historyRes = await fetch(`/api/churn-history`)
             const historyData = await historyRes.json()
             if (historyData.predictions) {
                 setHistory(historyData.predictions)

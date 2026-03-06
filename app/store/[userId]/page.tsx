@@ -38,7 +38,7 @@ export default function StoreFront({ params }: { params: Promise<{ userId: strin
     const [orderId, setOrderId] = useState<string | null>(null)
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/store/${userId}/products`)
+        fetch(`/api/store/${userId}/products`)
             .then(res => res.json())
             .then(data => {
                 if (data.error) throw new Error(data.error)
@@ -82,7 +82,7 @@ export default function StoreFront({ params }: { params: Promise<{ userId: strin
 
         setSubmitting(true)
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/store/${userId}/orders`, {
+            const res = await fetch(`/api/store/${userId}/orders`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

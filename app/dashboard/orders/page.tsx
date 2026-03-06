@@ -48,7 +48,7 @@ function CreateOrderPanel({ open, onClose, onCreated }: {
 
     useEffect(() => {
         if (!open) return
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/products`).then(r => r.json()).then(d => setProducts(d.products ?? []))
+        fetch(`/api/products`).then(r => r.json()).then(d => setProducts(d.products ?? []))
     }, [open])
 
     useEffect(() => {
@@ -79,7 +79,7 @@ function CreateOrderPanel({ open, onClose, onCreated }: {
         if (items.some(it => !it.name.trim())) { setError("All items must have a name."); return }
         setSaving(true)
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/orders`, {
+            const res = await fetch(`/api/orders`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -276,7 +276,7 @@ export default function OrdersPage() {
 
     const fetchOrders = useCallback(async () => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/orders`)
+            const res = await fetch(`/api/orders`)
             const data = await res.json()
             if (data.error) throw new Error(data.error)
             setOrders(data.orders || [])
@@ -292,7 +292,7 @@ export default function OrdersPage() {
     async function updateStatus(id: string, status: string) {
         setProcessingId(id)
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/orders/${id}`, {
+            const res = await fetch(`/api/orders/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status }),

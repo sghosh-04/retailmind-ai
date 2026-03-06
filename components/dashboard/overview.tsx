@@ -25,7 +25,7 @@ function SageMakerForecastButton({ item }: { item: { name: string; stock: number
   async function getForecast() {
     setLoading(true)
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/forecast`, {
+      const res = await fetch(`/api/forecast`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -146,7 +146,7 @@ export default function DashboardOverview({ initialStats }: Props) {
   const fetchStats = useCallback(async (manual = false) => {
     if (manual) setLoading(true)
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/dashboard/stats`)
+      const res = await fetch(`/api/dashboard/stats`)
       if (!res.ok) throw new Error("Failed")
       const data: Stats = await res.json()
       setStats(data)

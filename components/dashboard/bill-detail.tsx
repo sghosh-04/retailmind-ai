@@ -10,7 +10,7 @@ export default function BillDetail({ bill, items, profile }: { bill: any; items:
   const [status, setStatus] = useState(bill.status)
 
   async function markStatus(s: string) {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills/${bill.id}`, {
+    await fetch(`/api/bills/${bill.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: s }),

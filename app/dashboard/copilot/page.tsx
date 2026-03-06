@@ -177,7 +177,7 @@ export default function CopilotPage() {
   const fetchSessions = async () => {
     setSessionsLoad(true)
     try {
-      const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/chat/history`)
+      const r = await fetch(`/api/chat/history`)
       if (r.ok) setSessions((await r.json()).sessions ?? [])
     } finally { setSessionsLoad(false) }
   }
@@ -185,7 +185,7 @@ export default function CopilotPage() {
   const fetchStats = async () => {
     setStatsLoad(true)
     try {
-      const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/dashboard/stats`)
+      const r = await fetch(`/api/dashboard/stats`)
       if (r.ok) setStats(await r.json())
     } finally { setStatsLoad(false) }
   }
@@ -205,7 +205,7 @@ export default function CopilotPage() {
         updatedAt: new Date().toISOString(),
         provider: activeProvider,
       }
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/chat/history`, {
+      await fetch(`/api/chat/history`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "save", sessionId, sessionData }),
@@ -253,7 +253,7 @@ export default function CopilotPage() {
   // ── Load existing session ─────────────────────────────────────────────────
   const handleLoadSession = async (meta: SessionMeta) => {
     if (messages.length) persistSession()
-    const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/chat/history`, {
+    const r = await fetch(`/api/chat/history`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "get", sessionId: meta.id }),
@@ -269,7 +269,7 @@ export default function CopilotPage() {
   // ── Delete session ────────────────────────────────────────────────────────
   const deleteSession = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation()
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/chat/history`, {
+    await fetch(`/api/chat/history`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "delete", sessionId: id }),

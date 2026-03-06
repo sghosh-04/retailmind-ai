@@ -228,7 +228,7 @@ export default function InventorySearchClient({ userId }: { userId?: string }) {
     const loadAll = useCallback(async () => {
         setLoadingAll(true)
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/inventory-search`)
+            const res = await fetch(`/api/inventory-search`)
             const data = await res.json()
             setAllProducts(data.products || [])
             if (data.networkIp) setNetworkIp(data.networkIp)
@@ -253,7 +253,7 @@ export default function InventorySearchClient({ userId }: { userId?: string }) {
         async function runSearch() {
             setLoading(true)
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/inventory-search?q=${encodeURIComponent(q)}`)
+                const res = await fetch(`/api/inventory-search?q=${encodeURIComponent(q)}`)
                 const data = await res.json()
 
                 setResults(data.products || [])

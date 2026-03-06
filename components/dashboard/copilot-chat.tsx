@@ -57,7 +57,7 @@ export default function CopilotChat({
 
   useEffect(() => {
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/chat/history`)
+    fetch(`/api/chat/history`)
       .then(res => res.json())
       .then(data => {
 

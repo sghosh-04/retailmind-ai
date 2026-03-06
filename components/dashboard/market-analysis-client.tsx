@@ -216,7 +216,7 @@ export default function MarketAnalysisClient
   const loadInventory = useCallback(async () => {
     setInvLoading(true)
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/products`)
+      const res = await fetch(`/api/products`)
       const data = await res.json()
       setInvProducts(data.products || [])
     } catch { }
@@ -237,7 +237,7 @@ export default function MarketAnalysisClient
       setActiveTab("overview")
 
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/market-analysis`, {
+        const res = await fetch(`/api/market-analysis`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -270,7 +270,7 @@ export default function MarketAnalysisClient
   }, [initialQuery])
 
   const loadHistory = useCallback(async () => {
-    try { const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/market-analysis`); const data = await res.json(); setHistory(data.analyses || []) } catch { }
+    try { const res = await fetch(`/api/market-analysis`); const data = await res.json(); setHistory(data.analyses || []) } catch { }
   }, [])
   useEffect(() => { loadHistory() }, [loadHistory])
 
@@ -290,7 +290,7 @@ export default function MarketAnalysisClient
     if (!initialQuery) setQuery("")
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/market-analysis`, {
+      const res = await fetch(`/api/market-analysis`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -448,7 +448,7 @@ export default function MarketAnalysisClient
                         setWantToStart(null)
                         setActiveTab("overview")
                         try {
-                          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/market-analysis`, {
+                          const res = await fetch(`/api/market-analysis`, {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({ query: p.name, category: p.category || "", userCity, userState }),
@@ -1296,7 +1296,7 @@ export default function MarketAnalysisClient
                     onClick={async (e) => {
                       e.stopPropagation();
                       if (!confirm("Delete all search history? This cannot be undone.")) return;
-                      await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/market-analysis`, { method: "DELETE" });
+                      await fetch(`/api/market-analysis`, { method: "DELETE" });
                       setHistory([]);
                       setResult(null);
                     }}
@@ -1336,7 +1336,7 @@ export default function MarketAnalysisClient
                         <button
                           onClick={async (e) => {
                             e.stopPropagation();
-                            await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/market-analysis?id=${h.id}`, { method: "DELETE" });
+                            await fetch(`/api/market-analysis?id=${h.id}`, { method: "DELETE" });
                             setHistory(prev => prev.filter(x => x.id !== h.id));
                             if (result?.product_overview?.name === h.result?.product_overview?.name) setResult(null);
                           }}

@@ -62,7 +62,7 @@ export default function NewBillForm({ products }: Props) {
     }
     setError("")
     setSaving(true)
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills`, {
+    const res = await fetch(`/api/bills`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...customer, notes, bill_date, items }),

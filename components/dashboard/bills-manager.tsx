@@ -34,7 +34,7 @@ export default function BillsManager() {
 
   const load = useCallback(async () => {
     setLoading(true)
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills`)
+    const res = await fetch(`/api/bills`)
     const data = await res.json()
     setBills(data.bills || [])
     setLoading(false)
@@ -43,7 +43,7 @@ export default function BillsManager() {
   useEffect(() => { load() }, [load])
 
   async function markStatus(id: string, status: string) {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills/${id}`, {
+    await fetch(`/api/bills/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
@@ -53,7 +53,7 @@ export default function BillsManager() {
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this bill?")) return
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills/${id}`, { method: "DELETE" })
+    await fetch(`/api/bills/${id}`, { method: "DELETE" })
     load()
   }
 

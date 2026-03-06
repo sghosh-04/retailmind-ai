@@ -317,7 +317,7 @@ export default function ProductsPage() {
 
   const load = useCallback(async () => {
     setLoading(true)
-    const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/products`); const d = await r.json()
+    const r = await fetch(`/api/products`); const d = await r.json()
     setProducts(d.products ?? [])
     if (d.userId) setUserId(d.userId)
     if (d.networkIp) setNetworkIp(d.networkIp)
@@ -353,7 +353,7 @@ export default function ProductsPage() {
     setUploadingImage(true); setError("")
     const formData = new FormData(); formData.append("file", file)
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/upload`, { method: "POST", body: formData })
+      const res = await fetch(`/api/upload`, { method: "POST", body: formData })
       const data = await res.json()
       if (!res.ok) setError(data.error || "Upload failed")
       else setForm(f => ({ ...f, image_url: data.url }))
@@ -366,7 +366,7 @@ export default function ProductsPage() {
     if (!form.name.trim() || !form.price) { setError("Name and price are required."); return }
     setSaving(true); setError("")
     const body = { ...form, price: Number(form.price), cost_price: Number(form.cost_price), gst_rate: Number(form.gst_rate), stock_qty: Number(form.stock_qty), image_url: form.image_url }
-    const res = await fetch(editing ? `${process.env.NEXT_PUBLIC_API_URL || ""}/api/products/${editing.id}` : `${process.env.NEXT_PUBLIC_API_URL || ""}/api/products`, { method: editing ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+    const res = await fetch(editing ? `/api/products/${editing.id}` : `/api/products`, { method: editing ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
     const data = await res.json()
     if (!res.ok) { setError(data.error || "Save failed"); setSaving(false); return }
     setShowModal(false); load(); setSaving(false)
@@ -375,7 +375,7 @@ export default function ProductsPage() {
   async function handleDelete(id: string) {
     if (!confirm("Delete this product? This cannot be undone.")) return
     setDeletingId(id)
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/products/${id}`, { method: "DELETE" })
+    await fetch(`/api/products/${id}`, { method: "DELETE" })
     setDeletingId(null); load()
   }
 
@@ -398,7 +398,7 @@ export default function ProductsPage() {
         setAiParsing(true)
         let text = ""
         try { text = await file.text() } catch { text = `File: ${file.name}` }
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/products/parse-file`, {
+        const res = await fetch(`/api/products/parse-file`, {
           method: "POST", headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text, filename: file.name })
         })
@@ -429,7 +429,7 @@ export default function ProductsPage() {
       price: Number(r.price), cost_price: Number(r.cost_price) || 0,
       gst_rate: Number(r.gst_rate) || 18, stock_qty: Number(r.stock_qty) || 0, description: r.description || null
     }))
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/products/bulk`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ products: body }) })
+    const res = await fetch(`/api/products/bulk`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ products: body }) })
     const data = await res.json()
     setImportResults(data.results || [])
     setImporting(false); setImportMode("results"); load()

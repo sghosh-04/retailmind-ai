@@ -55,7 +55,7 @@ export default function NewBillPage() {
   const [error, setError] = useState("")
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/products`)
+    fetch(`/api/products`)
       .then((r) => r.json())
       .then((d) => setProducts(d.products ?? []))
   }, [])
@@ -104,7 +104,7 @@ export default function NewBillPage() {
     setSaving(true)
     setError("")
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills`, {
+      const res = await fetch(`/api/bills`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -21,7 +21,7 @@ export default function LoginCard() {
     setLoading(true)
     try {
       if (!otpMode) {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/auth/login?step=verify`, {
+        const res = await fetch(`/api/auth/login?step=verify`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -34,7 +34,7 @@ export default function LoginCard() {
           setOtpMode(true)
         }
       } else {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/auth/login?step=confirm`, {
+        const res = await fetch(`/api/auth/login?step=confirm`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, otp, otpToken }),

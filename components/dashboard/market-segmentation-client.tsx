@@ -93,7 +93,7 @@ export default function MarketSegmentationClient() {
         setIsLoading(true)
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/market-segment`, {
+            const response = await fetch(`/api/market-segment`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData)

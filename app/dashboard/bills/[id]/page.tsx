@@ -51,7 +51,7 @@ export default function BillDetailPage() {
   const [updating, setUpdating] = useState(false)
 
   const load = useCallback(async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills/${id}?t=${Date.now()}`)
+    const res = await fetch(`/api/bills/${id}?t=${Date.now()}`)
     if (!res.ok) { router.push("/dashboard/bills"); return }
     const data = await res.json()
     setBill(data.bill); setItems(data.items ?? []); setProfile(data.profile)
@@ -68,7 +68,7 @@ export default function BillDetailPage() {
     setBill({ ...bill, status: "paid" })
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills/${id}`, {
+      const res = await fetch(`/api/bills/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "paid" })

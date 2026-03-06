@@ -46,7 +46,7 @@ export default function ProductsManager() {
 
   async function load() {
     setLoading(true)
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/products`)
+    const res = await fetch(`/api/products`)
     const data = await res.json()
     setProducts(data.products || [])
     setLoading(false)
@@ -93,7 +93,7 @@ export default function ProductsManager() {
     formData.append("file", file)
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/upload`, {
+      const res = await fetch(`/api/upload`, {
         method: "POST",
         body: formData,
       })
@@ -122,7 +122,7 @@ export default function ProductsManager() {
       gst_rate: parseFloat(form.gst_rate),
       stock_qty: parseInt(form.stock_qty || "0"),
     }
-    const res = await fetch(editId ? `${process.env.NEXT_PUBLIC_API_URL || ""}/api/products/${editId}` : `${process.env.NEXT_PUBLIC_API_URL || ""}/api/products`, {
+    const res = await fetch(editId ? `/api/products/${editId}` : `/api/products`, {
       method: editId ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -136,7 +136,7 @@ export default function ProductsManager() {
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this product?")) return
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/products/${id}`, { method: "DELETE" })
+    await fetch(`/api/products/${id}`, { method: "DELETE" })
     load()
   }
 

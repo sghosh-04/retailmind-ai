@@ -53,7 +53,7 @@ function CreateOrderPanel({
 
   useEffect(() => {
     if (!open) return
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/products`).then(r => r.json()).then(d => setProducts(d.products ?? []))
+    fetch(`/api/products`).then(r => r.json()).then(d => setProducts(d.products ?? []))
   }, [open])
 
   // Reset form when opened
@@ -97,7 +97,7 @@ function CreateOrderPanel({
     if (items.some(it => !it.name.trim())) { setError("All items must have a name."); return }
     if (markPaid) setSavingAndPay(true); else setSaving(true)
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills`, {
+      const res = await fetch(`/api/bills`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -116,7 +116,7 @@ function CreateOrderPanel({
 
       // If "Create & Mark Paid", do a second PATCH
       if (markPaid) {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills/${data.bill.id}`, {
+        await fetch(`/api/bills/${data.bill.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: "paid" }),
@@ -365,7 +365,7 @@ export default function BillsPage() {
   const load = useCallback(async () => {
     setLoading(true)
     try {
-      const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills?t=${Date.now()}`)
+      const r = await fetch(`/api/bills?t=${Date.now()}`)
       const d = await r.json()
       setBills(d.bills ?? [])
     } catch {
@@ -382,7 +382,7 @@ export default function BillsPage() {
     setUpdatingId(id)
     setBills(prev => prev.map(b => b.id === id ? { ...b, status: "paid" } : b))
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "paid" }) })
+      const res = await fetch(`/api/bills/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "paid" }) })
       if (!res.ok) await load()
     } finally { setUpdatingId(null) }
   }
@@ -393,7 +393,7 @@ export default function BillsPage() {
     setDeletingId(id)
     setBills(prev => prev.filter(b => b.id !== id))
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/bills/${id}`, { method: "DELETE" })
+      const res = await fetch(`/api/bills/${id}`, { method: "DELETE" })
       if (!res.ok) await load()
     } finally { setDeletingId(null) }
   }
