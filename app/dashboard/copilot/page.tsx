@@ -100,10 +100,13 @@ export default function CopilotPage() {
   const [saving, setSaving] = useState(false)
   const [activeProvider, setActiveProvider] = useState("Gemini 2.5 Flash")
   const [copied, setCopied] = useState<string | null>(null)
+  const [attachedFile, setAttachedFile] = useState<string | null>(null)
+  const [isRecording, setIsRecording] = useState(false)
 
   const bottomRef = useRef<HTMLDivElement>(null)
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   // Tracks how many type-2 data items we've already processed to avoid
   // re-running on every streaming text chunk (which recreates the array ref)
   const dataLenRef = useRef(0)
@@ -242,6 +245,55 @@ export default function CopilotPage() {
     navigator.clipboard.writeText(content)
     setCopied(id)
     setTimeout(() => setCopied(null), 1800)
+  }
+
+  // ── File attachment ───────────────────────────────────────────────────────
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      const text = ev.target?.result
+      if (typeof text === "string") {
+        const prefix = `[Attached: ${file.name}]\n\n`
+        // Use setInput via the input ref workaround
+        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set
+        if (inputRef.current && nativeInputValueSetter) {
+          nativeInputValueSetter.call(inputRef.current, prefix + text)
+          inputRef.current.dispatchEvent(new Event("input", { bubbles: true }))
+        }
+        setAttachedFile(file.name)
+      }
+    }
+    // Reset input so same file can be re-selected
+    e.target.value = ""
+    reader.readAsText(file)
+  }
+
+  // ── Voice input ───────────────────────────────────────────────────────────
+  const toggleRecording = () => {
+    if (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
+      alert("Voice input is not supported in this browser. Try Chrome or Edge.")
+      return
+    }
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    const recognition = new SpeechRecognition()
+    recognition.lang = "en-IN"
+    recognition.interimResults = false
+    recognition.onstart = () => setIsRecording(true)
+    recognition.onresult = (e: any) => {
+      const transcript = e.results[0][0].transcript
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set
+      if (inputRef.current && nativeInputValueSetter) {
+        const current = inputRef.current.value
+        nativeInputValueSetter.call(inputRef.current, (current ? current + " " : "") + transcript)
+        inputRef.current.dispatchEvent(new Event("input", { bubbles: true }))
+        inputRef.current.focus()
+      }
+    }
+    recognition.onerror = () => setIsRecording(false)
+    recognition.onend = () => setIsRecording(false)
+    recognition.start()
   }
 
   // ── Derived KPIs ──────────────────────────────────────────────────────────
@@ -514,17 +566,63 @@ export default function CopilotPage() {
 
         {/* Input */}
         <div className="flex-shrink-0 px-5 pb-4 pt-2" style={{ borderTop: "1px solid rgba(71,255,134,0.06)" }}>
+
+          {/* Attached file indicator */}
+          {attachedFile && (
+            <div className="flex items-center gap-2 mb-2 px-3 py-1.5 rounded-xl" style={{ background: "rgba(71,255,134,0.07)", border: "1px solid rgba(71,255,134,0.2)" }}>
+              <Paperclip className="w-3 h-3 flex-shrink-0" style={{ color: "#47ff86" }} />
+              <span className="text-[11px] truncate flex-1" style={{ color: "#86efac" }}>{attachedFile}</span>
+              <button
+                type="button"
+                onClick={() => { setAttachedFile(null) }}
+                className="text-[10px] hover:opacity-80 transition-opacity"
+                style={{ color: "rgba(148,163,184,0.5)" }}
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          {/* Hidden file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="hidden"
+            accept=".txt,.csv,.pdf,.doc,.docx,.json,.md,.xml"
+            onChange={handleFileUpload}
+          />
+
           <form
             onSubmit={handleSubmit}
             className="flex items-center gap-2 rounded-2xl px-4 py-2.5"
             style={{ background: "rgba(15,23,42,0.65)", border: "1px solid rgba(71,255,134,0.14)" }}
           >
-            <button type="button" className="p-1 rounded-lg opacity-30 hover:opacity-60 transition-opacity flex-shrink-0">
-              <Paperclip className="w-4 h-4" style={{ color: "#94a3b8" }} />
+            {/* Attach button */}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              title="Attach document"
+              className="p-1 rounded-lg transition-all flex-shrink-0 hover:opacity-100"
+              style={{ color: attachedFile ? "#47ff86" : "#94a3b8", opacity: attachedFile ? 1 : 0.45 }}
+            >
+              <Paperclip className="w-4 h-4" />
             </button>
-            <button type="button" className="p-1 rounded-lg opacity-30 hover:opacity-60 transition-opacity flex-shrink-0">
-              <Mic className="w-4 h-4" style={{ color: "#94a3b8" }} />
+
+            {/* Mic button */}
+            <button
+              type="button"
+              onClick={toggleRecording}
+              title={isRecording ? "Recording… click to stop" : "Voice input"}
+              className="p-1 rounded-lg transition-all flex-shrink-0 hover:opacity-100"
+              style={{
+                color: isRecording ? "#ef4444" : "#94a3b8",
+                opacity: isRecording ? 1 : 0.45,
+                animation: isRecording ? "pulse 1s ease-in-out infinite" : "none",
+              }}
+            >
+              <Mic className="w-4 h-4" />
             </button>
+
             <input
               ref={inputRef}
               value={input}
