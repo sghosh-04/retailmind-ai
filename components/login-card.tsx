@@ -305,90 +305,9 @@ export default function LoginCard() {
           </p>
           <div className="login-hero-divider" />
 
-          {/* ── Unified Capability Panel ── */}
-          <div className="lf-panel">
+  
 
-            {/* Row 1 */}
-            <div className="lf-row" style={{ animationDelay: "0ms" }}>
-              <div className="lf-accent" />
-              <span className="lf-num">01</span>
-              <div className="lf-info">
-                <span className="lf-title">Demand Intelligence</span>
-                <span className="lf-desc">AI-powered forecasting that prevents stockouts before they happen</span>
-              </div>
-              <div className="lf-ico" style={{ background: "rgba(71,255,134,0.07)", border: "1px solid rgba(71,255,134,0.15)" }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <rect x="1" y="9.5" width="3" height="5" rx="1" fill="#47ff86" opacity="0.35"/>
-                  <rect x="6" y="6" width="3" height="8.5" rx="1" fill="#47ff86" opacity="0.65"/>
-                  <rect x="11" y="2" width="3" height="12.5" rx="1" fill="#47ff86"/>
-                  <path d="M2 9L6.5 5.5L11 7.5L15 2" stroke="#47ff86" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
-                  <circle cx="15" cy="2" r="1.2" fill="#47ff86"/>
-                </svg>
-              </div>
-            </div>
-
-            <div className="lf-divider" />
-
-            {/* Row 2 */}
-            <div className="lf-row" style={{ animationDelay: "75ms" }}>
-              <div className="lf-accent" />
-              <span className="lf-num">02</span>
-              <div className="lf-info">
-                <span className="lf-title">GST &amp; Billing</span>
-                <span className="lf-desc">Automated compliance tracking &amp; real-time invoice insights</span>
-              </div>
-              <div className="lf-ico" style={{ background: "rgba(96,165,250,0.07)", border: "1px solid rgba(96,165,250,0.15)" }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <rect x="3" y="1.5" width="10" height="13" rx="2" stroke="#60a5fa" strokeWidth="1.3" fill="rgba(96,165,250,0.05)"/>
-                  <path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke="#60a5fa" strokeWidth="1.1" strokeLinecap="round"/>
-                </svg>
-              </div>
-            </div>
-
-            <div className="lf-divider" />
-
-            {/* Row 3 */}
-            <div className="lf-row" style={{ animationDelay: "150ms" }}>
-              <div className="lf-accent" />
-              <span className="lf-num">03</span>
-              <div className="lf-info">
-                <span className="lf-title">Retail Copilot</span>
-                <span className="lf-desc">Conversational AI trained on your live business data</span>
-              </div>
-              <div className="lf-ico" style={{ background: "rgba(167,139,250,0.07)", border: "1px solid rgba(167,139,250,0.15)" }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M2 4a1.5 1.5 0 011.5-1.5h9A1.5 1.5 0 0114 4v6a1.5 1.5 0 01-1.5 1.5H8.5L6 13.5V11.5H3.5A1.5 1.5 0 012 10V4z" stroke="#a78bfa" strokeWidth="1.3" fill="rgba(167,139,250,0.06)"/>
-                  <circle cx="5.5" cy="7" r="0.9" fill="#a78bfa"/>
-                  <circle cx="8" cy="7" r="0.9" fill="#a78bfa"/>
-                  <circle cx="10.5" cy="7" r="0.9" fill="#a78bfa"/>
-                </svg>
-              </div>
-            </div>
-
-            <div className="lf-divider" />
-
-            {/* Row 4 */}
-            <div className="lf-row" style={{ animationDelay: "225ms" }}>
-              <div className="lf-accent" />
-              <span className="lf-num">04</span>
-              <div className="lf-info">
-                <span className="lf-title">Risk &amp; Churn</span>
-                <span className="lf-desc">Early signals for supplier issues &amp; customer attrition</span>
-              </div>
-              <div className="lf-ico" style={{ background: "rgba(251,191,36,0.07)", border: "1px solid rgba(251,191,36,0.15)" }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle cx="8" cy="8" r="6" stroke="#fbbf24" strokeWidth="1.3"/>
-                  <circle cx="8" cy="8" r="3.2" stroke="#fbbf24" strokeWidth="0.9" opacity="0.4"/>
-                  <circle cx="8" cy="8" r="1.2" fill="#fbbf24"/>
-                  <path d="M8 2v1.5M8 12.5V14M2 8h1.5M12.5 8H14" stroke="#fbbf24" strokeWidth="0.9" strokeLinecap="round" opacity="0.4"/>
-                </svg>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </div>
+        </div>      </div>        
 
       <style>{`
         /* ── Root ── */
