@@ -15,36 +15,74 @@ export default function LoginCard() {
   const [otp, setOtp] = useState("")
   const [otpToken, setOtpToken] = useState("")
 
+  const [forgotMode, setForgotMode] = useState<false | "request" | "reset">(false)
+  const [newPassword, setNewPassword] = useState("")
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError("")
     setLoading(true)
     try {
-      if (!otpMode) {
-        const res = await fetch(`/api/auth/login?step=verify`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        })
-        const data = await res.json()
-        if (!res.ok) {
-          setError(data.error || "Login failed")
+      if (forgotMode) {
+        if (forgotMode === "request") {
+          const res = await fetch(`/api/auth/forgot-password?step=request`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          })
+          const data = await res.json()
+          if (!res.ok) {
+            setError(data.error || "Failed to send reset OTP")
+          } else {
+            setOtpToken(data.otpToken)
+            setForgotMode("reset")
+          }
         } else {
-          setOtpToken(data.otpToken)
-          setOtpMode(true)
+          // Reset password step
+          const res = await fetch(`/api/auth/forgot-password?step=reset`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, otp, otpToken, newPassword }),
+          })
+          const data = await res.json()
+          if (!res.ok) {
+            setError(data.error || "Password reset failed")
+          } else {
+            // Success
+            setForgotMode(false)
+            setOtpMode(false)
+            setPassword("")
+            setNewPassword("")
+            setError("Password reset successfully. Please sign in.")
+          }
         }
       } else {
-        const res = await fetch(`/api/auth/login?step=confirm`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, otp, otpToken }),
-        })
-        const data = await res.json()
-        if (!res.ok) {
-          setError(data.error || "OTP Verification failed")
+        if (!otpMode) {
+          const res = await fetch(`/api/auth/login?step=verify`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          })
+          const data = await res.json()
+          if (!res.ok) {
+            setError(data.error || "Login failed")
+          } else {
+            setOtpToken(data.otpToken)
+            setOtpMode(true)
+          }
         } else {
-          document.cookie = `retailiq_session=${data.token}; path=/; max-age=604800; samesite=lax`;
-          window.location.href = "/dashboard"
+          const res = await fetch(`/api/auth/login?step=confirm`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, otp, otpToken }),
+          })
+          const data = await res.json()
+          if (!res.ok) {
+            setError(data.error || "OTP Verification failed")
+          } else {
+            document.cookie = `retailiq_session=${data.token}; path=/; max-age=604800; samesite=lax`;
+            window.location.href = "/dashboard"
+          }
         }
       }
     } catch {
@@ -71,8 +109,9 @@ export default function LoginCard() {
 
         {/* Heading */}
         <div className="login-heading">
-          <h1>Welcome Back</h1>
-          <p>Enter your credentials to access your retail analytics dashboard</p>
+          <h1>{forgotMode ? "Reset Password" : "Welcome Back"}</h1>
+          <p>{forgotMode ? "Enter your email to receive a password reset OTP" : "Enter your credentials to access your retail analytics dashboard"}
+          </p>
         </div>
 
         {/* Error */}
@@ -82,7 +121,63 @@ export default function LoginCard() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="login-form">
-          {!otpMode ? (
+          {forgotMode === "request" ? (
+            <div className="login-field">
+              <label htmlFor="login-email">Email Address</label>
+              <input
+                id="login-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@company.com"
+                required
+                autoComplete="email"
+              />
+            </div>
+          ) : forgotMode === "reset" ? (
+            <>
+              <div className="login-field">
+                <label htmlFor="login-otp">Verify Email OTP</label>
+                <input
+                  id="login-otp"
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  placeholder="Enter 6-digit OTP"
+                  required
+                  autoComplete="one-time-code"
+                  maxLength={6}
+                  style={{ textAlign: "center", letterSpacing: "4px", fontSize: "18px", fontWeight: "bold" }}
+                />
+                <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", marginTop: "4px" }}>
+                  An OTP has been sent to your email. Please enter it here.
+                </p>
+              </div>
+              <div className="login-field">
+                <label htmlFor="login-new-password">New Password</label>
+                <div className="login-password-wrap">
+                  <input
+                    id="login-new-password"
+                    type={showPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    minLength={8}
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    className="login-eye"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : !otpMode ? (
             <>
               <div className="login-field">
                 <label htmlFor="login-email">Email Address</label>
@@ -100,7 +195,7 @@ export default function LoginCard() {
               <div className="login-field">
                 <div className="login-field-header">
                   <label htmlFor="login-password">Password</label>
-                  <a href="#" className="login-forgot">Forgot password?</a>
+                  <button type="button" onClick={() => setForgotMode("request")} className="login-forgot bg-transparent border-0 cursor-pointer text-[13px] font-medium transition-colors" style={{ color: "#47ff86" }}>Forgot password?</button>
                 </div>
                 <div className="login-password-wrap">
                   <input
@@ -159,11 +254,23 @@ export default function LoginCard() {
               <Loader2 size={16} className="spin" />
             ) : (
               <>
-                {otpMode ? "Verify OTP" : "Sign In & Get OTP"} <ArrowRight size={16} />
+                {forgotMode === "request" ? "Send Reset OTP" 
+                 : forgotMode === "reset" ? "Reset Password" 
+                 : otpMode ? "Verify OTP" 
+                 : "Sign In & Get OTP"} <ArrowRight size={16} />
               </>
             )}
           </button>
         </form>
+
+        {forgotMode && (
+          <button 
+            onClick={() => { setForgotMode(false); setError(""); }}
+            className="mt-4 text-[13px] text-muted-foreground hover:text-white transition-colors bg-transparent border-0 cursor-pointer w-fit mx-auto"
+          >
+            ← Back to Login
+          </button>
+        )}
 
         {/* Footer link */}
         <p className="login-footer">

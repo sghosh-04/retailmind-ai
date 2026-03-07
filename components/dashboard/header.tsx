@@ -14,6 +14,7 @@ export default function DashboardHeader({ title, subtitle }: Props) {
 
   const [query, setQuery] = useState("")
   const [showNotifications, setShowNotifications] = useState(false)
+  const [showFeatures, setShowFeatures] = useState(false)
   const [notifications, setNotifications] = useState([
     { id: 1, title: "System Update", desc: "RetailMind AI has been updated to v1.2", time: "2m ago" },
     { id: 2, title: "New Feature", desc: "Try the new Market Analysis Copilot", time: "1h ago" }
@@ -587,18 +588,90 @@ export default function DashboardHeader({ title, subtitle }: Props) {
       </div>
 
       {/* Grid */}
-      <button
-        className="w-8 h-8 rounded-lg flex items-center justify-center transition-all"
-        style={{
-          background: "rgba(71,255,134,0.10)",
-          border: "1px solid rgba(71,255,134,0.20)",
-          color: "#47ff86",
-          cursor: "pointer",
-        }}
-        aria-label="Apps"
-      >
-        <LayoutGrid style={{ width: 14, height: 14 }} />
-      </button>
+      <div className="relative">
+        <button
+          onClick={() => setShowFeatures(!showFeatures)}
+          className="w-8 h-8 rounded-lg flex items-center justify-center transition-all relative"
+          style={{
+            background: showFeatures ? "rgba(71,255,134,0.15)" : "rgba(71,255,134,0.10)",
+            border: showFeatures ? "1px solid rgba(71,255,134,0.3)" : "1px solid rgba(71,255,134,0.20)",
+            color: showFeatures ? "#47ff86" : "#47ff86",
+            cursor: "pointer",
+          }}
+          aria-label="Features"
+        >
+          <LayoutGrid style={{ width: 14, height: 14 }} />
+        </button>
+
+        {showFeatures && (
+          <div
+            className="absolute right-0 top-11 w-80 rounded-xl flex flex-col overflow-hidden shadow-2xl z-[9999] border origin-top-right animate-in fade-in zoom-in-95 duration-200"
+            style={{
+              background: "rgba(10,20,14,0.98)",
+              borderColor: "rgba(71,255,134,0.2)",
+              backdropFilter: "blur(24px)",
+              boxShadow: "0 10px 40px -10px rgba(0,0,0,0.8), 0 0 20px -5px rgba(71,255,134,0.15)"
+            }}
+          >
+            <div
+              className="px-4 py-3 border-b bg-white/[0.02]"
+              style={{ borderColor: "rgba(255,255,255,0.08)" }}
+            >
+              <h3 className="text-sm font-bold text-white mb-1">Features Menu</h3>
+              <p className="text-xs text-muted-foreground">Quick access & search commands</p>
+            </div>
+            <div className="max-h-[380px] overflow-y-auto p-3 flex flex-col gap-4">
+              <div>
+                <h4 className="text-[10px] font-semibold text-[#47ff86] mb-2 px-1 uppercase tracking-wider">Quick Jump</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <button onClick={() => { setShowFeatures(false); router.push("/dashboard") }} className="text-left px-3 py-2 rounded-lg bg-white/5 hover:bg-[#47ff86]/10 border border-white/5 hover:border-[#47ff86]/30 transition-all">
+                    <p className="text-sm text-white font-medium">Dashboard</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">Main Overview</p>
+                  </button>
+                  <button onClick={() => { setShowFeatures(false); router.push("/dashboard/products") }} className="text-left px-3 py-2 rounded-lg bg-white/5 hover:bg-[#47ff86]/10 border border-white/5 hover:border-[#47ff86]/30 transition-all">
+                    <p className="text-sm text-white font-medium">Inventory</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">Manage Stock</p>
+                  </button>
+                  <button onClick={() => { setShowFeatures(false); router.push("/dashboard/product-search") }} className="text-left px-3 py-2 rounded-lg bg-white/5 hover:bg-[#47ff86]/10 border border-white/5 hover:border-[#47ff86]/30 transition-all">
+                    <p className="text-sm text-white font-medium">Search</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">Find Products</p>
+                  </button>
+                  <button onClick={() => { setShowFeatures(false); router.push("/dashboard/copilot") }} className="text-left px-3 py-2 rounded-lg bg-white/5 hover:bg-[#47ff86]/10 border border-white/5 hover:border-[#47ff86]/30 transition-all">
+                    <p className="text-sm text-white font-medium">AI Copilot</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">Assistant</p>
+                  </button>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="text-[10px] font-semibold text-[#47ff86] mb-2 px-1 uppercase tracking-wider">Search Commands</h4>
+                <div className="flex flex-col gap-2 px-1">
+                  <div className="flex items-center justify-between text-xs border-b border-white/5 pb-2">
+                    <span className="text-white/80">View Products</span>
+                    <span className="bg-black/30 border border-white/10 px-1.5 py-0.5 rounded text-muted-foreground font-mono text-[10px]">"products"</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs border-b border-white/5 pb-2">
+                    <span className="text-white/80">View Bills</span>
+                    <span className="bg-black/30 border border-white/10 px-1.5 py-0.5 rounded text-muted-foreground font-mono text-[10px]">"bills", "invoice"</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs border-b border-white/5 pb-2">
+                    <span className="text-white/80">Market Analysis</span>
+                    <span className="bg-black/30 border border-white/10 px-1.5 py-0.5 rounded text-muted-foreground font-mono text-[10px]">"market", "trends"</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs border-b border-white/5 pb-2">
+                    <span className="text-white/80">Quality Dashboard</span>
+                    <span className="bg-black/30 border border-white/10 px-1.5 py-0.5 rounded text-muted-foreground font-mono text-[10px]">"quality", "defects"</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs pb-1">
+                    <span className="text-white/80">Chat with AI</span>
+                    <span className="bg-black/30 border border-white/10 px-1.5 py-0.5 rounded text-muted-foreground font-mono text-[10px]">"ai", "copilot"</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </header>
   )
 }
